@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>计时器无法准确计时</title>
+    </head>
+    <body>
+        <button>click</button>
+        <script>
+            const btn = document.querySelector("button");
+            const initTime = new Date(); // 初始时间
+            btn.addEventListener("click", () => {
+                const btnClickTime = new Date();
+                while (new Date() - btnClickTime < 1000) {}
+                console.log("btn click time");
+                console.log(btnClickTime - initTime);
+            });
+
+            // 先执行定时器, 3秒后执行
+            setTimeout(() => {
+                const timeoutTime = new Date();
+                console.log("timeout time");
+                console.log(timeoutTime - initTime);
+            }, 3000);
+
+            // 后三秒死循环
+            while (new Date() - initTime < 3000) {}
+            // 3秒死循环后触发click事件
+            btn.click();
+        </script>
+    </body>
+</html>
+
+<!-- 
+2023年9月27日15:50:46
+定时器设定了3秒后执行, 但被click事件阻塞了, 实际执行时间超过了三秒
+结论: 定时器无法准确计时
+    原因1: 当前线程任务执行时间超过定时器时间
+    原因2: js线程无任务时, 计时器回调任务所在队列, 前面有任务待执行
+    原因3: 计时器回调任务排在所在队列首位, 但队列优先级较低, 高优先级队列有任务待执行
+ -->

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <!-- <script src="./防抖_节流.js"></script> -->
+        <script>
+            function debounce1(func, wait) {
+                let timeout;
+                return function () {
+                    const context = this;
+                    const args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function () {
+                        func.apply(context, args);
+                    }, wait);
+                };
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function () {
+                    if (timeout) clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        func(...arguments);
+                    }, wait);
+                };
+            }
+
+            function mouseMoveHandler() {
+                let count = 0;
+                return function () {
+                    count += 1;
+                    console.log("mouse move count:", count);
+                };
+            }
+
+            const callback = mouseMoveHandler();
+            const debouncedCB = debounce(callback, 100);
+            document.addEventListener("mousemove", debouncedCB);
+        </script>
+    </body>
+</html>

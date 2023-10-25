@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>link与import</title>
+        <link rel="stylesheet" href="style_link.css" />
+        <style type="text/css">
+            @import url("style_import.css");
+        </style>
+    </head>
+    <body>
+        <div>hi</div>
+        <script>
+            const div = document.querySelector("div");
+            console.log(div);
+            // div.style.backgroundColor = "red";
+            const style = document.querySelector("link[rel=stylesheet]");
+            console.log(style);
+            style.href = "new_style.css";
+        </script>
+    </body>
+</html>

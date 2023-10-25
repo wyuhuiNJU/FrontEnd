@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>你好!</h1>
+    <button>click</button>
+    <script>
+      const h1 = document.querySelector("h1");
+      const btn = document.querySelector("button");
+
+      function delay(time) {
+        const curTime = new Date();
+        while (new Date() - curTime < time) {} // 干等3秒钟
+      }
+      async function changeText() {
+        h1.innerHTML = await "Hello world";
+        console.log(
+          "🚀 ~ file: JS阻塞渲染.html:21 ~ changeText ~ h1.innerHTML:",
+          h1.innerHTML
+        );
+
+        delay(3000);
+      }
+      // 先改变的文本, 后触发的delay; 却会导致页面3秒后才显示新的文本
+      // 因为JS阻塞了渲染
+      // 渲染的任务是在 hi.innerHTML = "Hello world" 之后被创建的
+      // 当前的任务是changeText这一整个任务, 包括后面的delay(3000)
+      // 执行完后才会处理任务过程中产生的新的渲染任务
+
+      // 本质原因是渲染进程中的JS线程与GUI线程互斥, JS线程运行时, GUI线程被挂起
+      // (因为二者都会修改DOM, 渲染进程为了保证渲染结果的准确性, 必须得互斥)
+
+      btn.addEventListener("click", changeText);
+    </script>
+  </body>
+</html>
